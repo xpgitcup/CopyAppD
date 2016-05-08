@@ -22,16 +22,15 @@ import java.util.Properties;
  */
 public class TargetApplication {
 
-    String appName;
-    String appPath;
-    String systemDB;
-    String userDB;
-
+    
+    ApplicationProperty sourceApp = new ApplicationProperty();
+    ApplicationProperty targetApp = new ApplicationProperty();
+    
     public TargetApplication() {
-        appPath = CopyAppC.getCurrentRunPath();
-        appName = "NoNamed";
-        systemDB = "NoNamed";
-        userDB = "NoNamed";
+        targetApp.setAppPath(CopyAppC.getCurrentRunPath());
+        targetApp.setAppName("NoNamed");
+        targetApp.setSystemDB("NoNamed");
+        targetApp.setUserDB("NoNamed");
     }
 
     @Override
@@ -72,7 +71,7 @@ public class TargetApplication {
      * 修改工程文件中的工程名称.project
      */
     public void updateProjectFile() {
-        String pName = String.format("%s\\%s\\.project", appPath, appName);
+        String pName = String.format("%s\\%s\\.project", sourceApp.getAppPath(), sourceApp.getAppName());
         System.out.printf("工程文件：%s\n", pName);
         File pFile = new File(pName);
 
@@ -80,8 +79,8 @@ public class TargetApplication {
         
         printList(strings);
         
-        String source = String.format("<name>%s</name>", appName);
-        String target = String.format("<name>%s</name>", appName);
+        String source = String.format("<name>%s</name>", sourceApp.getAppName());
+        String target = String.format("<name>%s</name>", targetApp.getAppName());
         
         System.out.printf("关键字：%s --> %s\n", source, target);
 
@@ -97,7 +96,7 @@ public class TargetApplication {
      * 修改工程名称
      */
     public void updateProjectName() {
-        String pName = String.format("%s\\%s\\application.properties", appPath, appName);
+        String pName = String.format("%s\\%s\\application.properties", sourceApp.getAppPath(), sourceApp.getAppName());
         //def oName = "${appPath}\\${appName}\\application.propertiesA"
         System.out.printf("关键文件：%s\n", pName);
         File pFile = new File(pName);
@@ -109,13 +108,13 @@ public class TargetApplication {
                 properties.load(isr);
                 System.out.println(properties.getProperty("app.name"));
                 //----------------------------------------------------------------------------------------------------------
-                properties.setProperty("app.name", this.appName);
+                properties.setProperty("app.name", sourceApp.getAppName());
                 if (pFile.setWritable(true)) {
                     FileOutputStream fos = new FileOutputStream(pFile);
                     OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
                     System.out.println(properties.getProperty("app.name"));
                     properties.store(osw, "Grails Metadata file");
-                    System.out.printf("修改工程名称为：%s\n", appName);
+                    System.out.printf("修改工程名称为：%s\n", sourceApp.getAppName());
                 }
             } else {
                 System.out.printf("找不到关键文件：%s\n", pFile.getName());
@@ -131,7 +130,7 @@ public class TargetApplication {
      * @param properties
      */
     public void copyApplication(Properties properties) {
-        String targetApplication = String.format("%s\\%s", appPath, appName);
+        String targetApplication = String.format("%s\\%s", sourceApp.getAppPath(), sourceApp.getAppName());
         String source = properties.getProperty("主目录");
         String commond = String.format("xcopy %s %s /E /I /Y", source, targetApplication);
         System.out.println(commond);
@@ -153,32 +152,32 @@ public class TargetApplication {
 
         switch (argsCount) {
             case 0:
-                appName = "NoNamed";
-                systemDB = "NoNamed";
-                userDB = "NoNamed";
+                targetApp.setAppName("NoNamed");
+                targetApp.setSystemDB("NoNamed");
+                targetApp.setUserDB("NoNamed");
                 break;
             case 1:
                 //只有一个参数
-                appName = args[0];
-                systemDB = appName + "_systemDB";
-                userDB = appName + "_userDB";
+                targetApp.setAppName(args[0]);
+                targetApp.setSystemDB(targetApp.getAppName() + "_systemDB");
+                targetApp.setUserDB(targetApp.getAppName() + "_userDB");
                 break;
             case 2:
                 //有两个参数
-                appName = args[0];
-                systemDB = args[1];
-                userDB = appName + "_userDB";
+                targetApp.setAppName(args[0]);
+                targetApp.setSystemDB(args[1]);
+                targetApp.setUserDB(targetApp.getAppName() + "_userDB");
                 break;
             case 3:
                 //有三个参数
-                appName = args[0];
-                systemDB = args[1];
-                userDB = args[2];
+                targetApp.setAppName(args[0]);
+                targetApp.setSystemDB(args[1]);
+                targetApp.setUserDB(args[2]);
                 break;
             default:
-                appName = args[0];
-                systemDB = args[1];
-                userDB = args[2];
+                targetApp.setAppName(args[0]);
+                targetApp.setSystemDB(args[1]);
+                targetApp.setUserDB(args[2]);
                 break;
         }
     }
