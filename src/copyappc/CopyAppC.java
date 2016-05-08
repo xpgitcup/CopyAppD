@@ -77,6 +77,7 @@ public class CopyAppC {
         
         TargetApplication targetApplication = new TargetApplication();
         targetApplication.processArgs(args);
+        targetApplication.setupSource(mainObject.getSeedProperties());
         targetApplication.copyApplication(mainObject.getSeedProperties());
         targetApplication.updateProjectName();
         targetApplication.updateProjectFile();
