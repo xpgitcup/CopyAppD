@@ -96,7 +96,7 @@ public class TargetApplication {
      * 修改工程名称
      */
     public void updateProjectName() {
-        String pName = String.format("%s\\%s\\application.properties", sourceApp.getAppPath(), sourceApp.getAppName());
+        String pName = String.format("%s\\%s\\application.properties", targetApp.getAppPath(), targetApp.getAppName());
         //def oName = "${appPath}\\${appName}\\application.propertiesA"
         System.out.printf("关键文件：%s\n", pName);
         File pFile = new File(pName);
@@ -108,13 +108,13 @@ public class TargetApplication {
                 properties.load(isr);
                 System.out.println(properties.getProperty("app.name"));
                 //----------------------------------------------------------------------------------------------------------
-                properties.setProperty("app.name", sourceApp.getAppName());
+                properties.setProperty("app.name", targetApp.getAppName());
                 if (pFile.setWritable(true)) {
                     FileOutputStream fos = new FileOutputStream(pFile);
                     OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
                     System.out.println(properties.getProperty("app.name"));
                     properties.store(osw, "Grails Metadata file");
-                    System.out.printf("修改工程名称为：%s\n", sourceApp.getAppName());
+                    System.out.printf("修改工程名称为：%s\n", targetApp.getAppName());
                 }
             } else {
                 System.out.printf("找不到关键文件：%s\n", pFile.getName());
@@ -130,7 +130,7 @@ public class TargetApplication {
      * @param properties
      */
     public void copyApplication(Properties properties) {
-        String targetApplication = String.format("%s\\%s", sourceApp.getAppPath(), sourceApp.getAppName());
+        String targetApplication = String.format("%s\\%s", targetApp.getAppPath(), targetApp.getAppName());
         String source = properties.getProperty("主目录");
         String commond = String.format("xcopy %s %s /E /I /Y", source, targetApplication);
         System.out.println(commond);
