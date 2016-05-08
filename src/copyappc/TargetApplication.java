@@ -182,4 +182,11 @@ public class TargetApplication {
         }
     }
 
+    void setupSource(Properties seedProperties) {
+        sourceApp.setAppName(seedProperties.getProperty("程序名"));
+        sourceApp.setAppPath(seedProperties.getProperty("主目录"));
+        sourceApp.setSystemDB(seedProperties.getProperty("系统数据库"));
+        sourceApp.setUserDB(seedProperties.getProperty("用户数据库"));
+    }
+
 }
