@@ -38,6 +38,16 @@ public class TargetApplication {
         return "${appName}/(${systemDB},${userDB})@${appPath}";
     }
 
+    /**    
+     * 将List写入文件
+     * @param strings
+     * @param filePath
+     */
+    public void writeListToTextFile(List<String> strings, String filePath) {
+        File file = new File(filePath);
+    }
+    
+    
     /**
      * 功能：Java读取txt文件的内容 步骤：1：先获得文件句柄 2：获得文件句柄当做是输入一个字节码流，需要对这个输入流进行读取
      * 3：读取到输入流后，需要读取生成字节流 4：一行一行的输出。readline()。 备注：需要考虑的是异常情况
@@ -71,7 +81,7 @@ public class TargetApplication {
      * 修改工程文件中的工程名称.project
      */
     public void updateProjectFile() {
-        String pName = String.format("%s\\%s\\.project", sourceApp.getAppPath(), sourceApp.getAppName());
+        String pName = String.format("%s\\%s\\.project", targetApp.getAppPath(), targetApp.getAppName());
         System.out.printf("工程文件：%s\n", pName);
         File pFile = new File(pName);
 
@@ -111,10 +121,11 @@ public class TargetApplication {
                 properties.setProperty("app.name", targetApp.getAppName());
                 if (pFile.setWritable(true)) {
                     FileOutputStream fos = new FileOutputStream(pFile);
-                    OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-                    System.out.println(properties.getProperty("app.name"));
-                    properties.store(osw, "Grails Metadata file");
-                    System.out.printf("修改工程名称为：%s\n", targetApp.getAppName());
+                    try (OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8")) {
+                        System.out.println(properties.getProperty("app.name"));
+                        properties.store(osw, "Grails Metadata file");
+                        System.out.printf("修改工程名称为：%s\n", targetApp.getAppName());
+                    }
                 }
             } else {
                 System.out.printf("找不到关键文件：%s\n", pFile.getName());

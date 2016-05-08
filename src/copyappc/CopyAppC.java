@@ -96,8 +96,8 @@ public class CopyAppC {
         if (tempa.contains("file:")) {
             tempa = tempa.substring(6);
             System.out.println(tempa);
-            int k = tempa.indexOf("CopyAppC.jar");
-            tempa = tempa.substring(0, k + "CopyAppC.jar".length());
+            int k = tempa.indexOf("CopyAppD.jar");
+            tempa = tempa.substring(0, k + "CopyAppD.jar".length());
         } else {
             tempa = tempa.substring(1);
         }
